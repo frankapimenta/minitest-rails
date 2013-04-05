@@ -1,6 +1,6 @@
 	require "test_helper"
 
-# TODO: missing null values tests
+# TODO: missing default and null values tests
 
 <% module_namespacing do -%>
   	class <%= class_name %>MigrationTest < ActiveSupport::TestCase
