@@ -106,7 +106,6 @@
 	            migrate version: version_before(0)
 		end
 	<% elsif migration_action == 'remove' %>
-		<%= "#{attributes.inspect}" %>
 		def test_<%= file_name %>_table_schema
 	            migrate version: version_before(0)
 	            # assert existance of table, columns or index
