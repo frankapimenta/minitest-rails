@@ -7,7 +7,8 @@ class TestInstallGenerator < GeneratorTest
     assert_output(/create  test\/test_helper.rb/m) do
       MiniTest::Generators::InstallGenerator.start
     end
-    assert File.exists? "test/test_helper.rb"
+    assert File.exists?("test/test_helper.rb"), "test helper file does not exist"
+    assert File.exists?("test/migration_test_helper.rb"), "migration test helper does not exist"
     contents = File.read "test/test_helper.rb"
     assert_match(/require "rails\/test_help"/m, contents)
     assert_match(/require "minitest\/rails"/m, contents)

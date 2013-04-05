@@ -9,6 +9,7 @@ require "minitest/rails"
 
 # Uncomment for awesome colorful output
 # require "minitest/pride"
+require_relative 'migration_test_helper'
 
 class ActiveSupport::TestCase
   # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
