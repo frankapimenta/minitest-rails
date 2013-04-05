@@ -120,7 +120,6 @@ class TestMigrationGenerator < GeneratorTest
     end
     assert File.exists? "test/migrate/remove_email_from_posts_test.rb"
     contents = File.read "test/migrate/remove_email_from_posts_test.rb"
-    puts contents.split('\n').join
     assert_match(/class RemoveEmailFromPostsMigrationTest/m, contents)
     assert_match(/def test_remove_email_from_posts_table_schema/m, contents)
     assert_match(/assert_table :posts/, contents, "assert table not present")
