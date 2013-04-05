@@ -122,7 +122,7 @@ module MigrationTestHelpers
   def migrate(opts={})
     without_migration_noise do
       version = opts[:version] ? opts[:version].to_i : nil
-      ActiveRecord::Migrator.migrate(MigrationTestHelper.migration_dir, version)
+      ActiveRecord::Migrator.migrate(MigrationTestHelpers.migration_dir, version)
     end
   end
 
