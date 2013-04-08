@@ -157,10 +157,9 @@
 
 				migrate version: 0
 				assert_table :<%= join_tables.join('_') %> do |t|
-					t.integer			:id
 					<%- attributes.each_with_index do |attr, index| -%>
 						<%= "t.integer	:#{attr.name}_id" %>
-						<%= "# t.index  	[:#{(attributes-[attr]).first.name}_id, :#{attr.name}_id], name: 'index_#{join_tables.join('_')}_on_#{attributes.rotate(index).map(&:name).join('_id_and_on_')}_id', unique: false" %>
+						<%= "# t.index  	[:#{(attributes-[attr]).first.name}_id, :#{attr.name}_id], name: 'index_#{join_tables.join('_')}_on_#{attributes.rotate(index+1).map(&:name).join('_id_and_on_')}_id', unique: true " %>
 					<%- end -%>
 
 				end
@@ -215,7 +214,7 @@
 					<%- attributes.sort_by(&:type).each do |attr| -%>
 						<%- if attr.type.to_sym == :references %>
 							<%= "t.integer 	:#{attr.name}_id" -%> 
-							<%= "t.index     :#{attr.name}_id, name: 'index_#{table_name}_on_#{attr.name}_id', unique: #{attr.has_uniq_index?}" if attr.attr_options.has_key?(:index) %>
+							<%= "t.index     :#{attr.name}_id, name: 'index_#{table_name}_on_#{attr.name}_id', unique: #{attr.has_uniq_index? || attr.attr_options[:index] }" if attr.attr_options.has_key?(:index) %>
 						<%- else %>
 							<%= "t.#{attr.type} 	:#{attr.name}#{", #{attr.attr_options}" unless attr.attr_options.empty?}" %>
 							<%= "t.index 	:#{attr.name}, name: 'index_#{table_name}_on_#{attr.name}'#{", unique: #{attr.has_uniq_index?}"}" if attr.has_index? %>
