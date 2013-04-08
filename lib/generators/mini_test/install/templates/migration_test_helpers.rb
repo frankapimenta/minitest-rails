@@ -224,12 +224,13 @@ end
 
 class MigrationTest < MiniTest::Unit::TestCase
   include MigrationTestHelpers
+  include Connection
   include SQLHelpers
 
   def setup
     super
     drop_all_tables
-    @sql = ActiveRecord::Base.connection
+    @sql = conn 
   end
 
   def teardown
