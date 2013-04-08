@@ -1,9 +1,9 @@
-	require "test_helper"
+require_relative '../test_helper'
 
-# TODO: missing default and null values tests
+<%# TODO: missing default and null values tests %>
 
 <% module_namespacing do -%>
-	class <%= class_name %>MigrationTest < ActiveSupport::TestCase
+	class <%= class_name %>MigrationTest < MigrationTest
 	<% if migration_action == 'add' %> 
 
 		def test_<%= file_name %>_table_schema
@@ -16,7 +16,7 @@
 				<%- attributes.sort_by(&:type).each do |attr| -%>
 					<%- if attr.type.to_sym == :references %>
 						<%= "t.integer	:#{attr.name}_id" -%> 
-						<%= "t.index		:#{attr.name}_id, name: 'index_#{table_name}_on_#{attr.name}_id', unique: #{attr.has_uniq_index?}" if attr.attr_options.has_key?(:index) %>
+						<%= "t.index		:#{attr.name}_id, name: 'index_#{table_name}_on_#{attr.name}_id', unique: true" if attr.attr_options.has_key?(:index) %>
 					<%- else %>
 						<%= "t.#{attr.type}	:#{attr.name}#{", #{attr.attr_options}" unless attr.attr_options.empty?}" %>
 						<%= "t.index	:#{attr.name}, name: 'index_#{table_name}_on_#{attr.name}'#{", unique: #{attr.has_uniq_index?}"}" if attr.has_index? %>
@@ -68,7 +68,7 @@
 			_created_at = 2.day.ago.strftime("%Y-%m-%d %H:%M:%S")
 			_updated_at = 1.day.ago.strftime("%Y-%m-%d %H:%M:%S")        
 
-			sql.execute "INSERT INTO <%= table_name %> (id,<%- attributes.sort_by(&:type).each do |attr| -%> <%= attr.type == :references ? "#{attr.name.to_s}_id" : "#{attr.name.to_s}," %> <% end %>..., created_at, updated_at)
+			sql.execute "INSERT INTO <%= table_name %> (id,<%- attributes.sort_by(&:type).each do |attr| -%> <%= attr.type == :references ? "#{attr.name.to_s}_id, " : "#{attr.name.to_s}," %> <% end %>..., created_at, updated_at)
 				VALUES (\"#{_id}\",<%- attributes.sort_by(&:type).each do |attr| -%> <%= attr.type == :references ? "\\\"\#\{_#{attr.name.to_s}_id\}\\\"," : "\\\"\#\{_#{attr.name.to_s}\}\\\"," %> <% end %>\"#{...}\", \"#{_created_at}\", \"#{_updated_at}\")"
 
 			_<%= table_name %>_row  = sql.select_one "SELECT * FROM <%= table_name %>"
@@ -267,7 +267,7 @@
 				_created_at = 2.day.ago.strftime("%Y-%m-%d %H:%M:%S")
 				_updated_at = 1.day.ago.strftime("%Y-%m-%d %H:%M:%S")
 
-				sql.execute "INSERT INTO <%= table_name %> (id, <% attributes.sort_by(&:type).each do |attr| -%> <%= attr.type == :references ? "#{attr.name.to_s}_id" : "#{attr.name.to_s}," %> <% end %> created_at, updated_at)
+				sql.execute "INSERT INTO <%= table_name %> (id, <% attributes.sort_by(&:type).each do |attr| -%> <%= attr.type == :references ? "#{attr.name.to_s}_id, " : "#{attr.name.to_s}," %> <% end %> created_at, updated_at)
 										VALUES (\"#{_id}\", <% attributes.sort_by(&:type).each do |attr| -%> <%= attr.type == :references ? "\\\"\#\{_#{attr.name.to_s}_id\}\\\"," : "\\\"\#\{_#{attr.name.to_s}\}\\\"," %> <% end %>\"#{_created_at}\", \"#{_updated_at}\")"
         
 				_<%= table_name %>_row  = sql.select_one "SELECT * FROM <%= table_name %> WHERE id = \"#{_id}\""

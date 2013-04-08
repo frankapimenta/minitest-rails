@@ -120,6 +120,16 @@ class TestMigrationGenerator < GeneratorTest
     refute_match(/t.index\s+:email, name: 'index_posts_on_email', unique: true/, contents, "index not present or wrong index options for email attribute")
   end
 
+  def test_migration_generator_for_add_references_to_account
+    assert_output(/create  test\/migrate\/add_account_references_to_posts_test.rb/m) do
+      MiniTest::Generators::MigrationGenerator.start ["add_account_references_to_posts", 'account:references']
+    end
+    assert File.exists? "test/migrate/add_account_references_to_posts_test.rb"
+    contents = File.read "test/migrate/add_account_references_to_posts_test.rb"
+    assert_match(/t.integer\s+:account_id/, contents, "reference account_id not present")
+    assert_match(/t.index\s+:account_id, name: 'index_posts_on_account_id', unique: true/, contents, "index not present or wrong index options for email attribute")
+  end
+
   def test_migration_generator_for_remove_column_of_type_boolean
     assert_output(/create  test\/migrate\/remove_email_from_posts_test.rb/m) do
       MiniTest::Generators::MigrationGenerator.start ["remove_email_from_posts", 'email:string']
