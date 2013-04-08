@@ -94,21 +94,27 @@ class TestMigrationGenerator < GeneratorTest
   end
 
   def test_migration_generator_for_add_column_with_unique_index
-    MiniTest::Generators::MigrationGenerator.start ["add_email_to_posts", 'email:uniq']
+    assert_output(/create  test\/migrate\/add_email_to_posts_test.rb/m) do
+      MiniTest::Generators::MigrationGenerator.start ["add_email_to_posts", 'email:uniq']
+    end
     assert File.exists? "test/migrate/add_email_to_posts_test.rb"
     contents = File.read "test/migrate/add_email_to_posts_test.rb"
     assert_match(/t.index\s+:email, name: 'index_posts_on_email', unique: true/, contents, "index not present or wrong index options for email attribute")
   end
 
   def test_migration_generator_for_add_column_with_non_unique_index
-    MiniTest::Generators::MigrationGenerator.start ["add_email_to_posts", 'email:index']
+    assert_output(/create  test\/migrate\/add_email_to_posts_test.rb/m) do
+      MiniTest::Generators::MigrationGenerator.start ["add_email_to_posts", 'email:index']
+    end
     assert File.exists? "test/migrate/add_email_to_posts_test.rb"
     contents = File.read "test/migrate/add_email_to_posts_test.rb"
     assert_match(/t.index\s+:email, name: 'index_posts_on_email', unique: false/, contents, "index not present or wrong index options for email attribute")
   end
 
   def test_migration_generator_for_add_column_with_no_index
-    MiniTest::Generators::MigrationGenerator.start ["add_email_to_posts", 'email:string']
+    assert_output(/create  test\/migrate\/add_email_to_posts_test.rb/m) do
+      MiniTest::Generators::MigrationGenerator.start ["add_email_to_posts", 'email:string']
+    end
     assert File.exists? "test/migrate/add_email_to_posts_test.rb"
     contents = File.read "test/migrate/add_email_to_posts_test.rb"
     refute_match(/t.index\s+:email, name: 'index_posts_on_email', unique: true/, contents, "index not present or wrong index options for email attribute")
@@ -131,6 +137,4 @@ class TestMigrationGenerator < GeneratorTest
     assert_match(/assert_equal _created_at,\s+_posts_row\['created_at'\]/, contents, "assert_equal for _created_at did not match")
     assert_match(/assert_equal _updated_at,\s+_posts_row\['updated_at'\]/, contents, "assert_equal for _updated_at did not match")
   end
-  #test_migration_generator_foor_remove_column
-
 end
