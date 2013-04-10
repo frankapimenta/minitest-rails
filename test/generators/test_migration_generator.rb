@@ -15,9 +15,9 @@ class TestMigrationGenerator < GeneratorTest
     assert_match(/assert_table :users/, contents, "assert table not present")
     assert_match(/t.integer\s+:id/, contents, "id column not present")
     assert_match(/t.integer\s+:company_id/, contents, "company_id column not present")
-    assert_match(/t.index\s+:company_id, name: 'index_users_on_company_id', unique: true/, contents, "index not present or wrong index options for company_id foreign key")
+    assert_match(/t.index\s+:company_id, name: 'index_users_on_company_id', unique: false/, contents, "index not present or wrong index options for company_id foreign key")
     assert_match(/t.integer\s+:world_id/, contents, "world_id column not present")
-    assert_match(/t.index\s+:world_id, name: 'index_users_on_world_id', unique: true/, contents, "index not present or wrong index options for world_id foreign key")
+    assert_match(/t.index\s+:world_id, name: 'index_users_on_world_id', unique: false/, contents, "index not present or wrong index options for world_id foreign key")
     assert_match(/t.string\s+:name/, contents, "name column not present")
     assert_match(/t.string\s+:email/, contents, "email column not present")
     assert_match(/t.index\s+:email, name: 'index_users_on_email', unique: false/, contents, "index not present or wrong index options for guid attribute")
@@ -127,7 +127,7 @@ class TestMigrationGenerator < GeneratorTest
     assert File.exists? "test/migrate/add_account_references_to_posts_test.rb"
     contents = File.read "test/migrate/add_account_references_to_posts_test.rb"
     assert_match(/t.integer\s+:account_id/, contents, "reference account_id not present")
-    assert_match(/t.index\s+:account_id, name: 'index_posts_on_account_id', unique: true/, contents, "index not present or wrong index options for email attribute")
+    assert_match(/t.index\s+:account_id, name: 'index_posts_on_account_id', unique: false/, contents, "index not present or wrong index options for email attribute")
   end
 
   def test_migration_generator_for_remove_column_of_type_boolean

@@ -16,7 +16,7 @@ require_relative '../test_helper'
 				<%- attributes.sort_by(&:type).each do |attr| -%>
 					<%- if attr.type.to_sym == :references %>
 						<%= "t.integer	:#{attr.name}_id" -%> 
-						<%= "t.index		:#{attr.name}_id, name: 'index_#{table_name}_on_#{attr.name}_id', unique: true" if attr.attr_options.has_key?(:index) %>
+						<%= "t.index	:#{attr.name}_id, name: 'index_#{table_name}_on_#{attr.name}_id', unique: false" if attr.attr_options.has_key?(:index) %>
 					<%- else %>
 						<%= "t.#{attr.type}	:#{attr.name}#{", #{attr.attr_options}" unless attr.attr_options.empty?}" %>
 						<%= "t.index	:#{attr.name}, name: 'index_#{table_name}_on_#{attr.name}'#{", unique: #{attr.has_uniq_index?}"}" if attr.has_index? %>
@@ -214,7 +214,7 @@ require_relative '../test_helper'
 					<%- attributes.sort_by(&:type).each do |attr| -%>
 						<%- if attr.type.to_sym == :references %>
 							<%= "t.integer 	:#{attr.name}_id" -%> 
-							<%= "t.index     :#{attr.name}_id, name: 'index_#{table_name}_on_#{attr.name}_id', unique: #{attr.has_uniq_index? || attr.attr_options[:index] }" if attr.attr_options.has_key?(:index) %>
+							<%= "t.index     :#{attr.name}_id, name: 'index_#{table_name}_on_#{attr.name}_id', unique: false }" if attr.attr_options.has_key?(:index) %>
 						<%- else %>
 							<%= "t.#{attr.type} 	:#{attr.name}#{", #{attr.attr_options}" unless attr.attr_options.empty?}" %>
 							<%= "t.index 	:#{attr.name}, name: 'index_#{table_name}_on_#{attr.name}'#{", unique: #{attr.has_uniq_index?}"}" if attr.has_index? %>
