@@ -16,7 +16,7 @@ module MiniTest
       attr_reader :migration_action, :join_tables
 
       def set_local_assigns!
-        @migration_template = "migration_test.rb"
+        @migration_template = "migration.rb"
         case file_name
         when /^(add|remove)_.*_(?:to|from)_(.*)/
           @migration_action = $1
