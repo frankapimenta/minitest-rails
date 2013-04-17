@@ -13,7 +13,7 @@ module MiniTest
       end
 
       protected
-      attr_reader :migration_action, :join_tables
+      attr_reader :migration_action, :join_tables, :renamed_table
 
       def set_local_assigns!
         @migration_template = "migration.rb"
@@ -31,6 +31,10 @@ module MiniTest
         when /^create_(.+)/
           @migration_action = 'create'
           @table_name = $1.pluralize
+        when /^rename_table_(.+)_to_(.+)$/
+          @migration_action = 'rename_table'
+          @renamed_table = $1
+          @table_name = $2
         end
       end
 
