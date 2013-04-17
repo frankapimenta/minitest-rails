@@ -377,11 +377,38 @@ class <%= class_name %>MigrationTest < MigrationTest
 
 		# table <%= table_name %>
 		_id = 1
+	<%- case attributes.first && attributes.first.type.to_s -%>
+	<%- when 'binary' -%>
+		<%= "_#{attributes.first.name} = 0b1101" %>
+	<%- when 'boolean' -%>
+		<%= "_#{attributes.first.name} = true" %>
+	<%- when 'date' -%>
+		<%= "_#{attributes.first.name} = #{Time.now.to_date.to_s}" %>
+	<%- when 'datetime' -%>
+		<%= "_#{attributes.first.name} = #{DateTime.now.strftime('%Y-%m-%d %H:%M:%S')}" %>
+	<%- when 'decimal' -%>
+		<%= "_#{attributes.first.name} = 10" %>
+	<%- when 'float' -%>
+		<%= "_#{attributes.first.name} = 10.1" %>
+	<%- when 'integer' -%>
+		<%= "_#{attributes.first.name} = 2" %>
+	<%- when 'references' -%>
+		<%= "_#{attributes.first.name}_id = 1" %>
+	<%- when 'string' -%>
+		<%= "_#{attributes.first.name} = 'some data'" %>
+	<%- when 'text' -%>
+		<%= "_#{attributes.first.name} = 'some data really bigggggggg'" %>
+	<%- when 'time' -%>
+		<%= "_#{attributes.first.name} = #{Time.now.to_s}" %>
+	<%- else %>
+		"attribute requested not recognized"
+	<%- end -%>
 		# other_columns
+
 		_created_at = 2.day.ago.strftime("%Y-%m-%d %H:%M:%S")
 		_updated_at = 1.day.ago.strftime("%Y-%m-%d %H:%M:%S")
 
-		sql.execute "INSERT INTO <%= table_name %> (id, ..., created_at, updated_at) VALUES (\"#{_id}\", \"#{...}\", \"#{_created_at}\", \"#{_updated_at}\")"
+		sql.execute "INSERT INTO <%= table_name %> (id, <%= attributes.first && attributes.first.name %>, ..., created_at, updated_at) VALUES (\"#{_id}\", \"#{_<%= attributes.first && attributes.first.name %>}\", \"#{...}\", \"#{_created_at}\", \"#{_updated_at}\")"
 
 		_<%= table_name %>_row  = sql.select_one "SELECT * FROM <%= table_name %> WHERE id = \"#{_id}\""
 

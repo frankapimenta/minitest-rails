@@ -174,6 +174,7 @@ class TestMigrationGenerator < GeneratorTest
     assert_match(/assert_table :users/, contents, "assert table not present or wrong table name")
     assert_match(/t.boolean\s+:boss/, contents, "boss column not present")
     assert_match /def test_rename_column_admin_to_boss_on_users_table_data/m, contents, "wrong method name for test table data"
+    assert_match /_boss = true/, contents, "variable not existing or wrong name"
     assert_match(/_users_row  = sql.select_one \"SELECT \* FROM users WHERE id = \\\"#\{_id\}\\\"\"/, contents, "sql row fetch did not match" )
     assert_match /assert sql.table_exists\?\(\:users\)/m,  contents, "assert for table existance"
     assert_match /assert sql.column_exists\?\(\:users, \:admin\)/m,  contents, "assert for column admin existance"
