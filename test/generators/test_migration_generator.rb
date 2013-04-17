@@ -163,4 +163,20 @@ class TestMigrationGenerator < GeneratorTest
     assert_match /assert !sql.table_exists\?\(\:accounts\)/m,  contents, "assert for renamed table existance failed"
   end
 
+  def test_migration_generator_for_rename_column
+    assert_output(/create  test\/migrate\/rename_column_admin_to_boss_on_users_test.rb/m) do
+      MiniTest::Generators::MigrationGenerator.start ["rename_column_admin_to_boss_on_users", 'boss:boolean']
+    end
+    assert File.exists? "test/migrate/rename_column_admin_to_boss_on_users_test.rb"
+    contents = File.read "test/migrate/rename_column_admin_to_boss_on_users_test.rb"
+    assert_match /class RenameColumnAdminToBossOnUsers/m, contents, "wrong class name"
+    assert_match /def test_rename_column_admin_to_boss_on_users_table_schema/m, contents, "wrong method name for test table schema"
+    assert_match(/assert_table :users/, contents, "assert table not present or wrong table name")
+    assert_match(/t.boolean\s+:boss/, contents, "boss column not present")
+    assert_match /def test_rename_column_admin_to_boss_on_users_table_data/m, contents, "wrong method name for test table data"
+    assert_match(/_users_row  = sql.select_one \"SELECT \* FROM users WHERE id = \\\"#\{_id\}\\\"\"/, contents, "sql row fetch did not match" )
+    assert_match /assert sql.table_exists\?\(\:users\)/m,  contents, "assert for table existance"
+    assert_match /assert sql.column_exists\?\(\:users, \:admin\)/m,  contents, "assert for column admin existance"
+    assert_match /assert !sql.column_exists\?\(\:users, \:boss\)/m,  contents, "assert for column boss existance"
+  end
 end

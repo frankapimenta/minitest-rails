@@ -348,6 +348,50 @@ class <%= class_name %>MigrationTest < MigrationTest
 		migrate version: version_before(0)
 	end
 
+<% when 'rename_column' %>
+	def test_<%= file_name %>_table_schema
+		migrate version: version_before(0)
+		# assert existance of previous table before and after renaming
+		# assert sql.table_exists?(:<%= table_name %>)
+		# assert sql.column_exists?(:<%= table_name %>, :<%= old_column %>)
+		# assert !sql.column_exists?(:<%= table_name %>, :<%= new_column %>)
+
+		migrate version: 0
+		assert_table :<%= table_name %> do |t|
+			t.integer			:id
+			t.<%= attributes.first && attributes.first.type %>			:<%= new_column %>
+			# other columns
+			t.datetime			:created_at
+			t.datetime			:updated_at
+		end
+
+		migrate version: version_before(0)
+		# assert existance of previous table before and after renaming
+		# assert sql.table_exists?(:<%= table_name %>)
+		# assert sql.column_exists?(:<%= table_name %>, :<%= old_column %>)
+		# assert !sql.column_exists?(:<%= table_name %>, :<%= new_column %>)
+	end
+
+	def test_<%= file_name %>_table_data
+		migrate version: 0
+
+		# table <%= table_name %>
+		_id = 1
+		# other_columns
+		_created_at = 2.day.ago.strftime("%Y-%m-%d %H:%M:%S")
+		_updated_at = 1.day.ago.strftime("%Y-%m-%d %H:%M:%S")
+
+		sql.execute "INSERT INTO <%= table_name %> (id, ..., created_at, updated_at) VALUES (\"#{_id}\", \"#{...}\", \"#{_created_at}\", \"#{_updated_at}\")"
+
+		_<%= table_name %>_row  = sql.select_one "SELECT * FROM <%= table_name %> WHERE id = \"#{_id}\""
+
+		assert_equal _id,           _<%= table_name %>_row['id'].to_i
+		# assert other_columns
+		assert_equal _created_at,   _<%= table_name %>_row['created_at']
+		assert_equal _updated_at,   _<%= table_name %>_row['updated_at']
+
+		migrate version: version_before(0)
+	end
 <% else %>
 <% end %>
 end
