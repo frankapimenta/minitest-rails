@@ -154,7 +154,6 @@ class TestMigrationGenerator < GeneratorTest
     end
     assert File.exists? "test/migrate/rename_table_users_to_accounts_test.rb"
     contents = File.read "test/migrate/rename_table_users_to_accounts_test.rb"
-    puts contents.split('\n').join
     assert_match /class RenameTableUsersToAccounts/m, contents, "wrong class name"
     assert_match /def test_rename_table_users_to_accounts_table_schema/m, contents, "wrong method name for test table schema"
     assert_match(/assert_table :accounts/, contents, "assert table not present or wrong table name")
