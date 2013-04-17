@@ -6,8 +6,8 @@ class <%= class_name %>MigrationTest < MigrationTest
 	def test_<%= file_name %>_table_schema
 		migrate version: version_before(0)
 		# assert existance of table, columns or index
-		# assert sql.table_exists?(:<%= table_name %>)
-		# assert !sql.column_exists?(:<%= table_name %>, :column)
+		assert sql.table_exists?(:<%= table_name %>)
+		assert !sql.column_exists?(:<%= table_name %>, :<%= attributes.first && attributes.first.name %>)
 
 		migrate version: 0
 		assert_table :<%= table_name %> do |t|
@@ -27,8 +27,8 @@ class <%= class_name %>MigrationTest < MigrationTest
 
 		migrate version: version_before(0)
 		# assert existance of table, columns or index
-		# assert sql.table_exists?(:<%= table_name %>)
-		# assert !sql.column_exists?(:<%= table_name %>, :column)
+		assert sql.table_exists?(:<%= table_name %>)
+		assert !sql.column_exists?(:<%= table_name %>, :<%= attributes.first && attributes.first.name %>)
 	end
 
 	def test_<%= file_name %>_table_data
@@ -115,8 +115,8 @@ class <%= class_name %>MigrationTest < MigrationTest
 	def test_<%= file_name %>_table_schema
 		migrate version: version_before(0)
 		# assert existance of table, columns or index
-		# assert sql.table_exists?(:<%= table_name %>)
-		# assert sql.column_exists?(:<%= table_name %>, :column)
+		assert sql.table_exists?(:<%= table_name %>)
+		assert sql.column_exists?(:<%= table_name %>, :<%= attributes.first && attributes.first.name %>)
 
 		migrate version: 0
 		assert_table :<%= table_name %> do |t|
@@ -128,8 +128,8 @@ class <%= class_name %>MigrationTest < MigrationTest
 
 		migrate version: version_before(0)
 		# assert existance of table, columns or index
-		# assert sql.table_exists?(:<%= table_name %>)
-		# assert !sql.column_exists?(:<%= table_name %>, :column)
+		assert sql.table_exists?(:<%= table_name %>)
+		assert sql.column_exists?(:<%= table_name %>, :<%= attributes.first && attributes.first.name %>)
 	end
 
 	def test_<%= file_name %>_table_data
@@ -157,6 +157,7 @@ class <%= class_name %>MigrationTest < MigrationTest
 
 	def test_<%= file_name %>_table_schema
 		migrate version: version_before(0)
+		assert !sql.table_exists?(:<%= join_tables.join('_') %>)
 
 		migrate version: 0
 		assert_table :<%= join_tables.join('_') %> do |t|
@@ -168,6 +169,7 @@ class <%= class_name %>MigrationTest < MigrationTest
 
 		migrate version: version_before(0)
 		# assert existance of table, columns or index
+		assert !sql.table_exists?(:<%= join_tables.join('_') %>)
 	end
 
 	def test_<%= file_name %>_table_data
@@ -207,6 +209,7 @@ class <%= class_name %>MigrationTest < MigrationTest
 <% when 'create' %>
 	def test_<%= file_name %>_table_schema
 		migrate version: version_before(0)
+		assert !sql.table_exists?(:<%= table_name %>)
 
 		migrate version: 0
 		assert_table :<%= table_name %> do |t|
@@ -226,6 +229,7 @@ class <%= class_name %>MigrationTest < MigrationTest
 		end
 
 		migrate version: version_before(0)
+		assert !sql.table_exists?(:<%= table_name %>)
 	end
 
 	def test_<%= file_name %>_table_data
@@ -310,8 +314,8 @@ class <%= class_name %>MigrationTest < MigrationTest
 	def test_<%= file_name %>_table_schema
 		migrate version: version_before(0)
 		# assert existance of previous table before and after renaming
-		# assert sql.table_exists?(:<%= renamed_table %>)
-		# assert !sql.table_exists?(:<%= table_name %>)
+		assert sql.table_exists?(:<%= renamed_table %>)
+		assert !sql.table_exists?(:<%= table_name %>)
 
 		migrate version: 0
 		assert_table :<%= table_name %> do |t|
@@ -323,8 +327,8 @@ class <%= class_name %>MigrationTest < MigrationTest
 
 		migrate version: version_before(0)
 		# assert existance of previous table before and after renaming
-		# assert sql.table_exists?(:<%= renamed_table %>)
-		# assert !sql.table_exists?(:<%= table_name %>)
+		assert sql.table_exists?(:<%= renamed_table %>)
+		assert !sql.table_exists?(:<%= table_name %>)
 	end
 
 	def test_<%= file_name %>_table_data
@@ -352,9 +356,9 @@ class <%= class_name %>MigrationTest < MigrationTest
 	def test_<%= file_name %>_table_schema
 		migrate version: version_before(0)
 		# assert existance of previous table before and after renaming
-		# assert sql.table_exists?(:<%= table_name %>)
-		# assert sql.column_exists?(:<%= table_name %>, :<%= old_column %>)
-		# assert !sql.column_exists?(:<%= table_name %>, :<%= new_column %>)
+		assert sql.table_exists?(:<%= table_name %>)
+		assert sql.column_exists?(:<%= table_name %>, :<%= old_column %>)
+		assert !sql.column_exists?(:<%= table_name %>, :<%= new_column %>)
 
 		migrate version: 0
 		assert_table :<%= table_name %> do |t|
@@ -367,9 +371,9 @@ class <%= class_name %>MigrationTest < MigrationTest
 
 		migrate version: version_before(0)
 		# assert existance of previous table before and after renaming
-		# assert sql.table_exists?(:<%= table_name %>)
-		# assert sql.column_exists?(:<%= table_name %>, :<%= old_column %>)
-		# assert !sql.column_exists?(:<%= table_name %>, :<%= new_column %>)
+		assert sql.table_exists?(:<%= table_name %>)
+		assert sql.column_exists?(:<%= table_name %>, :<%= old_column %>)
+		assert !sql.column_exists?(:<%= table_name %>, :<%= new_column %>)
 	end
 
 	def test_<%= file_name %>_table_data
@@ -413,7 +417,32 @@ class <%= class_name %>MigrationTest < MigrationTest
 		_<%= table_name %>_row  = sql.select_one "SELECT * FROM <%= table_name %> WHERE id = \"#{_id}\""
 
 		assert_equal _id,           _<%= table_name %>_row['id'].to_i
-		# assert other_columns
+	<%- case attributes.first && attributes.first.type.to_s -%>
+	<%- when 'binary' %>
+		<%= "assert_equal _#{attributes.first.name},  _#{table_name}_row['#{attributes.first.name}']" -%>
+	<%- when 'boolean' %>
+		<%= "assert _#{table_name}_row['#{attributes.first.name}']" -%>
+	<%- when 'date' %>
+	<%= "assert_equal _#{attributes.first.name}, _#{table_name}_row['#{attributes.first.name}']" -%>
+	<%- when 'datetime' %>
+		<%= "assert_equal _#{attributes.first.name}, _#{table_name}_row['#{attributes.first.name}']" -%>
+	<%- when 'decimal' %>
+		<%= "assert_equal _#{attributes.first.name}, _#{table_name}_row['#{attributes.first.name}'].to_int" -%>
+	<%- when 'float' %>
+		<%= "assert_equal _#{attributes.first.name}, _#{table_name}_row['#{attributes.first.name}'].to_f" -%>
+	<%- when 'integer' %>
+		<%= "assert_equal _#{attributes.first.name}, _#{table_name}_row['#{attributes.first.name}'].to_i" -%>
+	<%- when 'references' %>
+		<%= "assert_equal _#{attributes.first.name}_id, _#{table_name}_row['#{attributes.first.name}_id'].to_i" -%>
+	<%- when 'string' %>
+		<%= "assert_equal _#{attributes.first.name}, _#{table_name}_row['#{attributes.first.name}']" -%>
+	<%- when 'text' %>
+		<%= "assert_equal _#{attributes.first.name}, _#{table_name}_row['#{attributes.first.name}']" -%>
+	<%- when 'time' %>
+		<%= "assert_equal _#{attributes.first.name}, _#{table_name}_row['#{attributes.first.name}']" -%>
+	<%- else %>
+		"attribute requested not recognized"
+	<%- end -%>
 		assert_equal _created_at,   _<%= table_name %>_row['created_at']
 		assert_equal _updated_at,   _<%= table_name %>_row['updated_at']
 

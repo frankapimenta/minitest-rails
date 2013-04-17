@@ -11,6 +11,7 @@ class TestMigrationGenerator < GeneratorTest
     contents = File.read "test/migrate/add_email_to_posts_test.rb"
     assert_match(/class AddEmailToPostsMigrationTest/m, contents)
     assert_match(/def test_add_email_to_posts_table_schema/m, contents)
+    assert_match /assert !sql.column_exists\?\(\:posts, \:email\)/m,  contents, "assert for column existance"
     assert_match(/assert_table :posts/, contents, "assert table not present or wrong table name")
     assert_match(/t.integer\s+:id/, contents, "id column not present")
     assert_match(/t.index\s+:email, name: 'index_posts_on_email', unique: true/, contents, "index not present or wrong index options for email attribute")
@@ -69,6 +70,8 @@ class TestMigrationGenerator < GeneratorTest
     contents = File.read "test/migrate/remove_email_from_posts_test.rb"
     assert_match(/class RemoveEmailFromPostsMigrationTest/m, contents)
     assert_match(/def test_remove_email_from_posts_table_schema/m, contents)
+    assert_match /assert sql.table_exists\?\(\:posts\)/m,  contents, "assert for table existance"
+    assert_match /assert sql.column_exists\?\(\:posts, \:email\)/m,  contents, "assert for column existance"
     assert_match(/assert_table :posts/, contents, "assert table not present or wrong table name")
     assert_match(/t.integer\s+:id/, contents, "id column not present")
     assert_match(/def test_remove_email_from_posts_table_data/m, contents, "wrong method name for test table data")
@@ -87,6 +90,7 @@ class TestMigrationGenerator < GeneratorTest
     contents = File.read "test/migrate/create_join_table_groups_posts_test.rb"
     assert_match(/class CreateJoinTableGroupsPostsMigrationTest/m, contents, "wrong class name")
     assert_match(/def test_create_join_table_groups_posts_table_schema/m, contents, "wrong method name for test table schema")
+    assert_match /assert !sql.table_exists\?\(\:groups_posts\)/m,  contents, "assert for table existance"
     assert_match(/assert_table :groups_posts/, contents, "assert table not present or wrong table name")
     assert_match(/t.integer\s+:group_id/, contents, "group_id column not present")
     assert_match(/t.integer\s+:post_id/, contents, "post_id column not present")
@@ -109,6 +113,7 @@ class TestMigrationGenerator < GeneratorTest
     contents = File.read "test/migrate/create_users_test.rb"
     assert_match(/class CreateUsersMigrationTest/m, contents, "wrong class name")
     assert_match(/def test_create_users_table_schema/m, contents, "wrong method name for test table schema")
+    assert_match /assert !sql.table_exists\?\(\:users\)/m,  contents, "assert for table existance"
     assert_match(/assert_table :users/, contents, "assert table not present or wrong table name")
     assert_match(/t.integer\s+:id/, contents, "id column not present")
     assert_match(/t.integer\s+:company_id/, contents, "company_id column not present")
@@ -156,11 +161,11 @@ class TestMigrationGenerator < GeneratorTest
     contents = File.read "test/migrate/rename_table_users_to_accounts_test.rb"
     assert_match /class RenameTableUsersToAccounts/m, contents, "wrong class name"
     assert_match /def test_rename_table_users_to_accounts_table_schema/m, contents, "wrong method name for test table schema"
+    assert_match /assert sql.table_exists\?\(\:users\)/m,  contents, "assert for table existance before renaming failed"
+    assert_match /assert !sql.table_exists\?\(\:accounts\)/m,  contents, "assert for renamed table existance failed"
     assert_match(/assert_table :accounts/, contents, "assert table not present or wrong table name")
     assert_match /def test_rename_table_users_to_accounts_table_data/m, contents, "wrong method name for test table data"
     assert_match(/_accounts_row  = sql.select_one \"SELECT \* FROM accounts WHERE id = \\\"#\{_id\}\\\"\"/, contents, "sql row fetch did not match" )
-    assert_match /assert sql.table_exists\?\(\:users\)/m,  contents, "assert for table existance before renaming failed"
-    assert_match /assert !sql.table_exists\?\(\:accounts\)/m,  contents, "assert for renamed table existance failed"
   end
 
   def test_migration_generator_for_rename_column
@@ -172,12 +177,13 @@ class TestMigrationGenerator < GeneratorTest
     assert_match /class RenameColumnAdminToBossOnUsers/m, contents, "wrong class name"
     assert_match /def test_rename_column_admin_to_boss_on_users_table_schema/m, contents, "wrong method name for test table schema"
     assert_match(/assert_table :users/, contents, "assert table not present or wrong table name")
+    assert_match /assert sql.table_exists\?\(\:users\)/m,  contents, "assert for table existance"
+    assert_match /assert sql.column_exists\?\(\:users, \:admin\)/m,  contents, "assert for column admin existance"
+    assert_match /assert !sql.column_exists\?\(\:users, \:boss\)/m,  contents, "assert for column boss existance"
     assert_match(/t.boolean\s+:boss/, contents, "boss column not present")
     assert_match /def test_rename_column_admin_to_boss_on_users_table_data/m, contents, "wrong method name for test table data"
     assert_match /_boss = true/, contents, "variable not existing or wrong name"
     assert_match(/_users_row  = sql.select_one \"SELECT \* FROM users WHERE id = \\\"#\{_id\}\\\"\"/, contents, "sql row fetch did not match" )
-    assert_match /assert sql.table_exists\?\(\:users\)/m,  contents, "assert for table existance"
-    assert_match /assert sql.column_exists\?\(\:users, \:admin\)/m,  contents, "assert for column admin existance"
-    assert_match /assert !sql.column_exists\?\(\:users, \:boss\)/m,  contents, "assert for column boss existance"
+    assert_match(/assert _users_row\[\'boss\'\]/, contents, "assert row column failed")
   end
 end
