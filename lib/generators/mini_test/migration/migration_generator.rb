@@ -13,36 +13,36 @@ module MiniTest
       end
 
       protected
-      attr_reader :migration_action, :join_tables, :renamed_table, :old_column, :new_column
+      attr_reader :migration_action, :join_tables
 
       def set_local_assigns!
         @migration_template = "migration.rb"
         case file_name
-        when /^(add|remove)_.*_(?:to|from)_(.*)/
+        when /^(add|remove)_(.*)_(?:to|from)_(.*)$/
           @migration_action = $1
-          @table_name       = $2.pluralize
-        when /join_table/
-          if attributes.length == 2
-            @migration_action  = 'join'
-            @join_tables       = attributes.map(&:plural_name)
-
-            set_index_names
+          @table_name = $3.pluralize
+          @migration_template = 'columns.rb'
+          @migration_template = 'timestamps.rb' if $2 =~ /^timestamps$/ 
+        when /^(add|remove)_index(?:es)?_(.*)_on_(.*)$/
+          @migration_action = $1
+          @table_name = $3.pluralize
+          @migration_template = 'indexes.rb' 
+        when /join/
+          if attributes.size == 2
+            @migration_action = 'join'
+            @join_tables = attributes.map(&:plural_name)
+            @migration_template = 'tables.rb'
           end
-        when /^create_(.+)/
+        when /^create_(.*)/
           @migration_action = 'create'
           @table_name = $1.pluralize
-        when /^rename_table_(.+)_to_(.+)$/
-          @migration_action = 'rename_table'
-          @renamed_table = $1
-          @table_name = $2
-        when /^rename_column_(.+)_to_(.+)_on_(.+)/
-          @migration_action = 'rename_column'
-          @old_column = $1
-          @new_column = $2
-          @table_name = $3
+          @migration_template = 'tables.rb'
+        else
+          @migration_template = 'empty.rb'
         end
       end
 
+      # do we need the code below?
       def set_index_names
         attributes.each_with_index do |attr, i|
           attr.index_name = [attr, attributes[i - 1]].map{ |a| index_name_for(a) }
