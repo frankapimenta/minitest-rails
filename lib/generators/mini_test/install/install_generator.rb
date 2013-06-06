@@ -15,6 +15,7 @@ DESC
 
       def copy_minitest_files
         template 'test_helper.rb', File.join("test", "test_helper.rb")
+        template 'migration_test_helpers.rb', File.join("test", "migration_test_helpers.rb")
       end
 
     end
