@@ -4,12 +4,12 @@ require_relative '../test_helper'
 class <%= class_name %>MigrationTest < MigrationTest
 <% case migration_action.to_s when 'add' -%>
 	def test_<%= file_name %>_table_schema
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 		# assert existance of table, columns or index
 		assert sql.table_exists?(:<%= table_name %>)
 		assert !sql.column_exists?(:<%= table_name %>, :<%= attributes.first && attributes.first.name %>)
 
-		migrate version: 0
+		migrate version: <%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>
 		assert_table :<%= table_name %> do |t|
 			t.integer	:id
 		<%- attributes.sort_by(&:type).each do |attr| -%>
@@ -25,14 +25,14 @@ class <%= class_name %>MigrationTest < MigrationTest
 			t.datetime	:updated_at
 		end
 
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 		# assert existance of table, columns or index
 		assert sql.table_exists?(:<%= table_name %>)
 		assert !sql.column_exists?(:<%= table_name %>, :<%= attributes.first && attributes.first.name %>)
 	end
 
 	def test_<%= file_name %>_table_data
-		migrate version: 0
+		migrate version: <%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>
 
 		# <%= table_name %>
 		_id = 1
@@ -106,19 +106,19 @@ class <%= class_name %>MigrationTest < MigrationTest
 		assert_equal _created_at, _<%= table_name %>_row['created_at']
 		assert_equal _updated_at, _<%= table_name %>_row['updated_at']        
 
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 
 	end
 
 <% when 'remove' -%>
 
 	def test_<%= file_name %>_table_schema
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 		# assert existance of table, columns or index
 		assert sql.table_exists?(:<%= table_name %>)
 		assert sql.column_exists?(:<%= table_name %>, :<%= attributes.first && attributes.first.name %>)
 
-		migrate version: 0
+		migrate version: <%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>
 		assert_table :<%= table_name %> do |t|
 			t.integer			:id
 			# other columns
@@ -126,14 +126,14 @@ class <%= class_name %>MigrationTest < MigrationTest
 			t.datetime			:updated_at
 		end
 
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 		# assert existance of table, columns or index
 		assert sql.table_exists?(:<%= table_name %>)
 		assert sql.column_exists?(:<%= table_name %>, :<%= attributes.first && attributes.first.name %>)
 	end
 
 	def test_<%= file_name %>_table_data
-		migrate version: 0
+		migrate version: <%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>
 
 		# table <%= table_name %>
 		_id = 1
@@ -150,16 +150,16 @@ class <%= class_name %>MigrationTest < MigrationTest
 		assert_equal _created_at,   _<%= table_name %>_row['created_at']
 		assert_equal _updated_at,   _<%= table_name %>_row['updated_at']
 
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 	end
 
 <% when 'join' -%>
 
 	def test_<%= file_name %>_table_schema
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 		assert !sql.table_exists?(:<%= join_tables.join('_') %>)
 
-		migrate version: 0
+		migrate version: <%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>
 		assert_table :<%= join_tables.join('_') %> do |t|
 		<%- attributes.each_with_index do |attr, index| -%>
 			<%= "t.integer	:#{attr.name}_id" %>
@@ -167,14 +167,14 @@ class <%= class_name %>MigrationTest < MigrationTest
 		<%- end -%>
 		end
 
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 		# assert existance of table, columns or index
 		assert !sql.table_exists?(:<%= join_tables.join('_') %>)
 	end
 
 	def test_<%= file_name %>_table_data
 
-		migrate version: 0
+		migrate version: <%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>
 
 		<%- join_tables.each do |table| -%>
 		# table <%= table %>
@@ -203,15 +203,15 @@ class <%= class_name %>MigrationTest < MigrationTest
 		assert_equal _created_at,   _<%= join_tables.join('_') %>_row['created_at']
 		assert_equal _updated_at,   _<%= join_tables.join('_') %>_row['updated_at']
 
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 	end
 
 <% when 'create' %>
 	def test_<%= file_name %>_table_schema
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 		assert !sql.table_exists?(:<%= table_name %>)
 
-		migrate version: 0
+		migrate version: <%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>
 		assert_table :<%= table_name %> do |t|
 			t.integer	:id
 		<% attributes.sort_by(&:type).each do |attr| -%>
@@ -228,12 +228,12 @@ class <%= class_name %>MigrationTest < MigrationTest
 			t.datetime	:updated_at
 		end
 
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 		assert !sql.table_exists?(:<%= table_name %>)
 	end
 
 	def test_<%= file_name %>_table_data
-		migrate version: 0
+		migrate version: <%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>
 
 		# table <%= table_name %>
 		_id = 1
@@ -308,16 +308,16 @@ class <%= class_name %>MigrationTest < MigrationTest
 		assert_equal _created_at, _<%= table_name %>_row['created_at']
 		assert_equal _updated_at, _<%= table_name %>_row['updated_at']
 
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 	end
 <% when 'rename_table' %>
 	def test_<%= file_name %>_table_schema
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 		# assert existance of previous table before and after renaming
 		assert sql.table_exists?(:<%= renamed_table %>)
 		assert !sql.table_exists?(:<%= table_name %>)
 
-		migrate version: 0
+		migrate version: <%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>
 		assert_table :<%= table_name %> do |t|
 			t.integer			:id
 			# other columns
@@ -325,14 +325,14 @@ class <%= class_name %>MigrationTest < MigrationTest
 			t.datetime			:updated_at
 		end
 
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 		# assert existance of previous table before and after renaming
 		assert sql.table_exists?(:<%= renamed_table %>)
 		assert !sql.table_exists?(:<%= table_name %>)
 	end
 
 	def test_<%= file_name %>_table_data
-		migrate version: 0
+		migrate version: <%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>
 
 		# table <%= table_name %>
 		_id = 1
@@ -349,18 +349,18 @@ class <%= class_name %>MigrationTest < MigrationTest
 		assert_equal _created_at,   _<%= table_name %>_row['created_at']
 		assert_equal _updated_at,   _<%= table_name %>_row['updated_at']
 
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 	end
 
 <% when 'rename_column' %>
 	def test_<%= file_name %>_table_schema
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 		# assert existance of previous table before and after renaming
 		assert sql.table_exists?(:<%= table_name %>)
 		assert sql.column_exists?(:<%= table_name %>, :<%= old_column %>)
 		assert !sql.column_exists?(:<%= table_name %>, :<%= new_column %>)
 
-		migrate version: 0
+		migrate version: <%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>
 		assert_table :<%= table_name %> do |t|
 			t.integer			:id
 			t.<%= attributes.first && attributes.first.type %>			:<%= new_column %>
@@ -369,7 +369,7 @@ class <%= class_name %>MigrationTest < MigrationTest
 			t.datetime			:updated_at
 		end
 
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 		# assert existance of previous table before and after renaming
 		assert sql.table_exists?(:<%= table_name %>)
 		assert sql.column_exists?(:<%= table_name %>, :<%= old_column %>)
@@ -377,7 +377,7 @@ class <%= class_name %>MigrationTest < MigrationTest
 	end
 
 	def test_<%= file_name %>_table_data
-		migrate version: 0
+		migrate version: <%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>
 
 		# table <%= table_name %>
 		_id = 1
@@ -446,7 +446,7 @@ class <%= class_name %>MigrationTest < MigrationTest
 		assert_equal _created_at,   _<%= table_name %>_row['created_at']
 		assert_equal _updated_at,   _<%= table_name %>_row['updated_at']
 
-		migrate version: version_before(0)
+		migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
 	end
 <% else %>
 <% end %>

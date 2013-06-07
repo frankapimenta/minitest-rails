@@ -9,7 +9,8 @@ module MiniTest
 
       def create_test_file
           set_local_assigns!
-          template @migration_template, File.join("test/migrate", class_path, "#{file_name}_test.rb")
+          _file_path = "#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_#{file_name}_test.rb"
+          template @migration_template, File.join("test/migrate", class_path, _file_path)
       end
 
       protected
