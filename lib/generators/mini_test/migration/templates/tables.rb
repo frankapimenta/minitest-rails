@@ -50,7 +50,21 @@ require_relative '../test_helper'
       assert_equal _created_at,   _<%= join_tables.rotate.join('_') %>_row['created_at']
       assert_equal _updated_at,   _<%= join_tables.rotate.join('_') %>_row['updated_at']
       migrate version: version_before(0)
-    end  
+    end
+<%- elsif migration_action == 'rename' %>
+    def test_<%= file_name %>_table_schema
+      migrate version: version_before(0)
+
+      assert sql.table_exists? :<%= table_name %>
+      assert !sql.table_exists? :<%= new_table_name %>
+
+      migrate version: 0
+
+      assert !sql.table_exists? :<%= table_name %>
+      assert sql.table_exists? :<%= new_table_name %>
+
+      migrate version: version_before(0)
+    end
 <%- else -%>
     def test_<%= file_name %>_table_schema
       migrate version: version_before(0)
