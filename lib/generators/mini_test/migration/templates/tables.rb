@@ -55,13 +55,13 @@ require_relative '../test_helper'
     def test_<%= file_name %>_table_schema
       migrate version: version_before(0)
 
-      assert sql.table_exists? :<%= table_name %>
-      assert !sql.table_exists? :<%= new_table_name %>
+      assert sql.table_exists?(:<%= table_name %>)
+      assert !sql.table_exists?(:<%= new_table_name %>)
 
       migrate version: 0
 
-      assert !sql.table_exists? :<%= table_name %>
-      assert sql.table_exists? :<%= new_table_name %>
+      assert !sql.table_exists?(:<%= table_name %>)
+      assert sql.table_exists?(:<%= new_table_name %>)
 
       migrate version: version_before(0)
     end

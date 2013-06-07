@@ -213,10 +213,10 @@ class TestMigrationGenerator < GeneratorTest
     contents = File.read "test/migrate/rename_posts_to_articles_test.rb"
     assert_match(/class RenamePostsToArticles/, contents, "wrong class name")
     assert_match(/def test_rename_posts_to_articles_table_schema/m, contents, "wrong method name for test table schema")
-    assert_match(/assert sql.table_exists\? :posts/, contents, "call to current table existance not present or wrong format")
-    assert_match(/assert !sql.table_exists\? :articles/, contents, "call to not new table existance not present or wrong format")
-    assert_match(/assert !sql.table_exists\? :posts/, contents, "call to not current table existance not present or wrong format")
-    assert_match(/assert sql.table_exists\? :articles/, contents, "call to new table existance not present or wrong format")
+    assert_match(/assert sql.table_exists\?\(:posts\)/, contents, "call to current table existance not present or wrong format")
+    assert_match(/assert !sql.table_exists\?\(:articles\)/, contents, "call to not new table existance not present or wrong format")
+    assert_match(/assert !sql.table_exists\?\(:posts\)/, contents, "call to not current table existance not present or wrong format")
+    assert_match(/assert sql.table_exists\?\(:articles\)/, contents, "call to new table existance not present or wrong format")
     refute_match(/def test_rename_posts_to_articles_table_date/m, contents, "table schema method test present")
   end
   def test_migration_generator_for_class_with_many_names
