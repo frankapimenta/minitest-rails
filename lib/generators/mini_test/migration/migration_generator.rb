@@ -34,14 +34,18 @@ module MiniTest
             @join_tables = attributes.map(&:plural_name)
             @migration_template = 'tables.rb'
           end
-        when /^(create|rename)_(.+)/
-            @migration_template = "tables.rb"
+        when /^rename_.*_from_(.*)$/
+          @migration_action = 'rename'
+          @table_name = $1.pluralize
+          @migration_template = 'columns.rb'
+        when /^(create|rename)_(.+)$/
             @migration_action = $1
-          if migration_action == 'create'
+            @migration_template = "tables.rb"
+          if @migration_action == 'create'
             @table_name = $2.pluralize
-          else
-            $2 =~ /(.*)_to_(.*)/
-            @table_name, @new_table_name = $1.pluralize, $2.pluralize
+          else # so rename
+              $2 =~ /(.*)_to_(.*)/
+              @table_name, @new_table_name = $1.pluralize, $2.pluralize
           end
         else
           @migration_template = 'empty.rb'

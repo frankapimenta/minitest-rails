@@ -120,7 +120,7 @@ require_relative '../test_helper'
         assert sql.column_exists?(:<%= table_name %>, :<%= attribute.name %>)
         <%- end -%>
 
-        migrate version:<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%> 
+        migrate version: <%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%> 
 
         <%- attributes.each do |attribute| -%>
         assert !sql.column_exists?(:<%= table_name %>, :<%= attribute.name %>)
@@ -131,6 +131,45 @@ require_relative '../test_helper'
         assert sql.table_exists?(:<%= table_name %>)
         <%- attributes.each do |attribute| -%>
         assert sql.column_exists?(:<%= table_name %>, :<%= attribute.name %>)
+        <%- end -%>
+      end
+    <%- end -%>
+    <%- if migration_action == 'rename' -%>
+      def test_<%= file_name %>_table_schema
+        migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
+
+        assert sql.table_exists?(:<%= table_name %>)
+
+        <%- attributes.each do |attribute| -%>
+        assert sql.column_exists?(:<%= attribute.name %>)
+        <%- end -%>
+
+        <%- attributes.size.times do -%>
+        assert !sql.column_exists?(:new_column_name)
+        <%- end -%>
+
+        migrate version: <%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%> 
+
+        assert sql.table_exists?(:<%= table_name %>)
+
+        <%- attributes.each do |attribute| -%>
+        assert !sql.column_exists?(:<%= attribute.name %>)
+        <%- end -%>
+
+        <%- attributes.size.times do -%>
+        assert sql.column_exists?(:new_column_name)
+        <%- end -%>
+
+        migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
+
+        assert sql.table_exists?(:<%= table_name %>)
+
+        <%- attributes.each do |attribute| -%>
+        assert sql.column_exists?(:<%= attribute.name %>)
+        <%- end -%>
+
+        <%- attributes.size.times do -%>
+        assert sql.column_exists?(:new_column_name)
         <%- end -%>
       end
     <%- end -%>

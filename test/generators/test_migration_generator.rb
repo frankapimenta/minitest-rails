@@ -4,11 +4,11 @@ require "generators/mini_test/migration/migration_generator"
 class TestMigrationGenerator < GeneratorTest
     
   def test_add_single_column
-    assert_output /create  test\/migrate\/add_column_title_to_posts_test.rb/m do
+    assert_output /create  test\/migrate\/\d{14}_add_column_title_to_posts_test.rb/m do
       MiniTest::Generators::MigrationGenerator.start ["add_column_title_to_posts", "title:string"]
     end
-    assert File.exists? "test/migrate/add_column_title_to_posts_test.rb"
-    contents = File.read "test/migrate/add_column_title_to_posts_test.rb"
+    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_add_column_title_to_posts_test.rb"
+    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_add_column_title_to_posts_test.rb"
     assert_match(/class AddColumnTitleToPostsMigrationTest/m, contents)
     assert_match(/def test_add_column_title_to_posts_table_schema/m, contents)
     assert_match /assert sql.table_exists\?\(\:posts\)/m,  contents, "assert for table existance"
@@ -26,11 +26,11 @@ class TestMigrationGenerator < GeneratorTest
     assert_match(/assert_equal _updated_at, _posts_row\['updated_at'\]/, contents, "assert_equal for _updated_at did not match")
   end
   def test_add_single_column_with_index
-    assert_output /create  test\/migrate\/add_column_title_to_posts_test.rb/m do
+    assert_output /create  test\/migrate\/\d{14}_add_column_title_to_posts_test.rb/m do
       MiniTest::Generators::MigrationGenerator.start ["add_column_title_to_posts", "title:string:index"]
     end
-    assert File.exists? "test/migrate/add_column_title_to_posts_test.rb"
-    contents = File.read "test/migrate/add_column_title_to_posts_test.rb"
+    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_add_column_title_to_posts_test.rb"
+    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_add_column_title_to_posts_test.rb"
     assert_match(/class AddColumnTitleToPostsMigrationTest/m, contents)
     assert_match(/def test_add_column_title_to_posts_table_schema/m, contents)
     assert_match /assert sql.table_exists\?\(\:posts\)/m,  contents, "assert for table existance"
@@ -49,11 +49,11 @@ class TestMigrationGenerator < GeneratorTest
     assert_match(/assert_equal _updated_at, _posts_row\['updated_at'\]/, contents, "assert_equal for _updated_at did not match")
   end
   def test_add_columns_one_with_index
-    assert_output /create  test\/migrate\/add_column_title_and_email_to_posts_test.rb/m do
+    assert_output /create  test\/migrate\/\d{14}_add_column_title_and_email_to_posts_test.rb/m do
       MiniTest::Generators::MigrationGenerator.start ["add_column_title_and_email_to_posts", "title:string", "email:string:index"]
     end
-    assert File.exists? "test/migrate/add_column_title_and_email_to_posts_test.rb"
-    contents = File.read "test/migrate/add_column_title_and_email_to_posts_test.rb"
+    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_add_column_title_and_email_to_posts_test.rb"
+    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_add_column_title_and_email_to_posts_test.rb"
     assert_match(/class AddColumnTitleAndEmailToPostsMigrationTest/m, contents)
     assert_match(/def test_add_column_title_and_email_to_posts_table_schema/m, contents)
     assert_match /assert sql.table_exists\?\(\:posts\)/m,  contents, "assert for table existance"
@@ -74,11 +74,11 @@ class TestMigrationGenerator < GeneratorTest
     assert_match(/assert_equal _updated_at, _posts_row\['updated_at'\]/, contents, "assert_equal for _updated_at did not match")
   end
   def test_remove_single_column
-    assert_output /create  test\/migrate\/remove_column_title_from_posts_test.rb/m do
+    assert_output /create  test\/migrate\/\d{14}_remove_column_title_from_posts_test.rb/m do
       MiniTest::Generators::MigrationGenerator.start ["remove_column_title_from_posts", "title:string"]
     end
-    assert File.exists? "test/migrate/remove_column_title_from_posts_test.rb"
-    contents = File.read "test/migrate/remove_column_title_from_posts_test.rb"
+    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_remove_column_title_from_posts_test.rb"
+    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_remove_column_title_from_posts_test.rb"
     assert_match(/class RemoveColumnTitleFromPostsMigrationTest/m, contents)
     assert_match(/def test_remove_column_title_from_posts_table_schema/m, contents)
     assert_match /assert sql.table_exists\?\(\:posts\)/m,  contents, "assert for table existance"
@@ -87,11 +87,11 @@ class TestMigrationGenerator < GeneratorTest
     refute_match(/def test_remove_column_title_from_posts_table_data/m, contents, "method for test table data present")
   end
   def test_remove_columns
-    assert_output /create  test\/migrate\/remove_column_title_and_email_from_posts_test.rb/m do
+    assert_output /create  test\/migrate\/\d{14}_remove_column_title_and_email_from_posts_test.rb/m do
       MiniTest::Generators::MigrationGenerator.start ["remove_column_title_and_email_from_posts", "title:string", "email:string"]
     end
-    assert File.exists? "test/migrate/remove_column_title_and_email_from_posts_test.rb"
-    contents = File.read "test/migrate/remove_column_title_and_email_from_posts_test.rb"
+    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_remove_column_title_and_email_from_posts_test.rb"
+    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_remove_column_title_and_email_from_posts_test.rb"
     assert_match(/class RemoveColumnTitleAndEmailFromPostsMigrationTest/m, contents)
     assert_match(/def test_remove_column_title_and_email_from_posts_table_schema/m, contents)
     assert_match /assert sql.table_exists\?\(\:posts\)/m,  contents, "assert for table existance"
@@ -102,11 +102,11 @@ class TestMigrationGenerator < GeneratorTest
     refute_match(/def test_remove_column_title_and_email_from_posts_table_data/m, contents, "method for test table data present")
   end
   def test_add_timestamps_to_table
-    assert_output /create  test\/migrate\/add_timestamps_to_posts_test.rb/m do
+    assert_output /create  test\/migrate\/\d{14}_add_timestamps_to_posts_test.rb/m do
       MiniTest::Generators::MigrationGenerator.start ["add_timestamps_to_posts"]
     end
-    assert File.exists? "test/migrate/add_timestamps_to_posts_test.rb"
-    contents = File.read "test/migrate/add_timestamps_to_posts_test.rb"
+    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_add_timestamps_to_posts_test.rb"
+    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_add_timestamps_to_posts_test.rb"
     assert_match(/class AddTimestampsToPostsMigrationTest/m, contents)
     assert_match(/def test_add_timestamps_to_posts_table_schema/m, contents)
     assert_match /assert sql.table_exists\?\(\:posts\)/m,  contents, "assert for table existance"
@@ -117,11 +117,11 @@ class TestMigrationGenerator < GeneratorTest
     refute_match(/def test_add_timestamps_to_posts_table_data/m, contents, "method for test table data present")
   end
   def test_add_indexes_on_table
-    assert_output /create  test\/migrate\/add_indexes_username_and_code_on_posts_test.rb/m do
+    assert_output /create  test\/migrate\/\d{14}_add_indexes_username_and_code_on_posts_test.rb/m do
       MiniTest::Generators::MigrationGenerator.start ["add_indexes_username_and_code_on_posts", "username:uniq", "code"]
     end
-    assert File.exists? "test/migrate/add_indexes_username_and_code_on_posts_test.rb"
-    contents = File.read "test/migrate/add_indexes_username_and_code_on_posts_test.rb"
+    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_add_indexes_username_and_code_on_posts_test.rb"
+    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_add_indexes_username_and_code_on_posts_test.rb"
     assert_match(/class AddIndexesUsernameAndCodeOnPostsMigrationTest/m, contents)
     assert_match(/def test_add_indexes_username_and_code_on_posts_table_schema/m, contents)
     assert_match /assert sql.table_exists\?\(\:posts\)/m,  contents, "assert for table existance"
@@ -134,11 +134,11 @@ class TestMigrationGenerator < GeneratorTest
     refute_match(/def test_add_timestamps_to_posts_table_data/m, contents, "method for test table data present")
   end
   def test_remove_indexes_on_table
-    assert_output /create  test\/migrate\/remove_indexes_username_and_code_on_posts_test.rb/m do
+    assert_output /create  test\/migrate\/\d{14}_remove_indexes_username_and_code_on_posts_test.rb/m do
       MiniTest::Generators::MigrationGenerator.start ["remove_indexes_username_and_code_on_posts", "username:uniq", "code"]
     end
-    assert File.exists? "test/migrate/remove_indexes_username_and_code_on_posts_test.rb"
-    contents = File.read "test/migrate/remove_indexes_username_and_code_on_posts_test.rb"
+    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_remove_indexes_username_and_code_on_posts_test.rb"
+    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_remove_indexes_username_and_code_on_posts_test.rb"
     assert_match(/class RemoveIndexesUsernameAndCodeOnPostsMigrationTest/m, contents)
     assert_match(/def test_remove_indexes_username_and_code_on_posts_table_schema/m, contents)
     assert_match /assert sql.table_exists\?\(\:posts\)/m,  contents, "assert for table existance"
@@ -151,12 +151,12 @@ class TestMigrationGenerator < GeneratorTest
     refute_match(/def test_remove_timestamps_to_posts_table_data/m, contents, "method for test table data present")
   end
   def test_create_table
-    assert_output /create  test\/migrate\/create_users_test.rb/m do
+    assert_output /create  test\/migrate\/\d{14}_create_users_test.rb/m do
       _generator_options = ["create_users", "company:references", "world:references", "name:string", "email:string:index", "guid:integer:uniq", "admin:boolean"]
       MiniTest::Generators::MigrationGenerator.start _generator_options
     end
-    assert File.exists? "test/migrate/create_users_test.rb"
-    contents = File.read "test/migrate/create_users_test.rb"
+    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_create_users_test.rb"
+    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_create_users_test.rb"
     assert_match(/class CreateUsersMigrationTest/m, contents, "wrong class name")
     assert_match(/def test_create_users_table_schema/m, contents, "wrong method name for test table schema")
     assert_match /assert !sql.table_exists\?\(\:users\)/m,  contents, "assert for table existance"
@@ -187,11 +187,11 @@ class TestMigrationGenerator < GeneratorTest
     assert_match(/assert_equal _updated_at, _users_row\['updated_at'\]/, contents, "assert_equal for _updated_at did not match")
   end
   def test_create_join_table
-    assert_output(/create  test\/migrate\/create_join_table_groups_posts_test.rb/m) do
+    assert_output(/create  test\/migrate\/\d{14}_create_join_table_groups_posts_test.rb/m) do
       MiniTest::Generators::MigrationGenerator.start ["create_join_table_groups_posts", 'group', 'post']
     end
-    assert File.exists? "test/migrate/create_join_table_groups_posts_test.rb"
-    contents = File.read "test/migrate/create_join_table_groups_posts_test.rb"
+    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_create_join_table_groups_posts_test.rb"
+    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_create_join_table_groups_posts_test.rb"
     assert_match(/class CreateJoinTableGroupsPostsMigrationTest/m, contents, "wrong class name")
     assert_match(/def test_create_join_table_groups_posts_table_schema/m, contents, "wrong method name for test table schema")
     assert_match /assert !sql.table_exists\?\(\:posts_groups\)/m,  contents, "assert for table existance"
@@ -206,11 +206,11 @@ class TestMigrationGenerator < GeneratorTest
     assert_match(/assert_equal _updated_at,\s+_posts_groups_row\['updated_at'\]/, contents, "assert_equal for _updated_at did not match")
   end
   def test_rename_table
-    assert_output(/create  test\/migrate\/rename_posts_to_articles_test.rb/m) do
+    assert_output(/create  test\/migrate\/\d{14}_rename_posts_to_articles_test.rb/m) do
       MiniTest::Generators::MigrationGenerator.start ["rename_posts_to_articles", 'posts', 'articles']
     end
-    assert File.exists? "test/migrate/rename_posts_to_articles_test.rb"
-    contents = File.read "test/migrate/rename_posts_to_articles_test.rb"
+    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_rename_posts_to_articles_test.rb"
+    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_rename_posts_to_articles_test.rb"
     assert_match(/class RenamePostsToArticles/, contents, "wrong class name")
     assert_match(/def test_rename_posts_to_articles_table_schema/m, contents, "wrong method name for test table schema")
     assert_match(/assert sql.table_exists\?\(:posts\)/, contents, "call to current table existance not present or wrong format")
@@ -219,23 +219,40 @@ class TestMigrationGenerator < GeneratorTest
     assert_match(/assert sql.table_exists\?\(:articles\)/, contents, "call to new table existance not present or wrong format")
     refute_match(/def test_rename_posts_to_articles_table_date/m, contents, "table schema method test present")
   end
+  def test_rename_columns_from_table
+    assert_output(/create  test\/migrate\/\d{14}_rename_name_and_owner_from_posts_test.rb/m) do
+      MiniTest::Generators::MigrationGenerator.start ["rename_name_and_owner_from_posts", "name", "owner"]
+    end
+    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_rename_name_and_owner_from_posts_test.rb"
+    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_rename_name_and_owner_from_posts_test.rb"
+    assert_match(/class RenameNameAndOwnerFromPostsMigrationTest/, contents, "wrong class name")
+    assert_match(/def test_rename_name_and_owner_from_posts_table_schema/m, contents, "wrong method name for test table schema")
+    assert_match(/assert sql.table_exists\?\(:posts\)/, contents, "call to current table existance not present or wrong format")
+    assert_match(/assert sql.column_exists\?\(:name\)/, contents, "call to column name existance not present or wrong format")
+    assert_match(/assert sql.column_exists\?\(:owner\)/, contents, "call to column owner existance not present or wrong format")
+    assert_match(/assert sql.column_exists\?\(:new_column_name\)/, contents, "call to column owner existance not present or wrong format")
+    assert_match(/assert !sql.column_exists\?\(:new_column_name\)/, contents, "call to column owner existance not present or wrong format")
+    assert_match(/assert !sql.column_exists\?\(:name\)/, contents, "call to column name non existance not present or wrong format")
+    assert_match(/assert !sql.column_exists\?\(:owner\)/, contents, "call to column owner non existance not present or wrong format")
+    refute_match(/def test_rename_name_and_owner_from_posts_table_date/m, contents, "table schema method test present")
+  end
   def test_migration_generator_for_class_with_many_names
-    assert_output(/create  test\/migrate\/create_product_details_test.rb/m) do
+    assert_output(/create  test\/migrate\/\d{14}_create_product_details_test.rb/m) do
       MiniTest::Generators::MigrationGenerator.start ["create_product_details"]
     end
-    assert File.exists? "test/migrate/create_product_details_test.rb"
-    contents = File.read "test/migrate/create_product_details_test.rb"
+    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_create_product_details_test.rb"
+    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_create_product_details_test.rb"
     assert_match(/class CreateProductDetailsMigrationTest/m, contents, "wrong class name")
     assert_match(/def test_create_product_details_table_schema/m, contents, "wrong method name for test table schema")
     assert_match(/assert_table :product_details/, contents, "assert table not present or wrong table name")
     assert_match(/def test_create_product_details_table_data/m, contents, "wrong method name for test table data")
   end
   def test_migration_generator_for_unrecognized_migration
-    assert_output(/create  test\/migrate\/this_one_is_not_known_test.rb/m) do
+    assert_output(/create  test\/migrate\/\d{14}_this_one_is_not_known_test.rb/m) do
       MiniTest::Generators::MigrationGenerator.start ["this_one_is_not_known"]
     end
-    assert File.exists? "test/migrate/this_one_is_not_known_test.rb"
-    contents = File.read "test/migrate/this_one_is_not_known_test.rb"
+    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_this_one_is_not_known_test.rb"
+    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_this_one_is_not_known_test.rb"
     assert_match /class ThisOneIsNotKnownMigrationTest/m, contents, "wrong class name"
     assert_match /def test_this_one_is_not_known_table_schema/m, contents, "wrong method name for test table schema"
     assert_match /assert_table :table_name/, contents, "assert table not present or wrong table name"
