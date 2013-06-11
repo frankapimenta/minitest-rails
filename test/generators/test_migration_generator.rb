@@ -220,13 +220,13 @@ class TestMigrationGenerator < GeneratorTest
     refute_match(/def test_rename_posts_to_articles_table_date/m, contents, "table schema method test present")
   end
   def test_rename_columns_from_table
-    assert_output(/create  test\/migrate\/\d{14}_rename_name_and_owner_from_posts_test.rb/m) do
-      MiniTest::Generators::MigrationGenerator.start ["rename_name_and_owner_from_posts", "name", "owner"]
+    assert_output(/create  test\/migrate\/\d{14}_rename_name_to_owner_on_posts_test.rb/m) do
+      MiniTest::Generators::MigrationGenerator.start ["rename_name_to_owner_on_posts", "name", "owner"]
     end
-    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_rename_name_and_owner_from_posts_test.rb"
-    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_rename_name_and_owner_from_posts_test.rb"
-    assert_match(/class RenameNameAndOwnerFromPostsMigrationTest/, contents, "wrong class name")
-    assert_match(/def test_rename_name_and_owner_from_posts_table_schema/m, contents, "wrong method name for test table schema")
+    assert File.exists? "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_rename_name_to_owner_on_posts_test.rb"
+    contents = File.read "test/migrate/#{Time.now.utc.strftime("%Y%m%d%H%M%S")}_rename_name_to_owner_on_posts_test.rb"
+    assert_match(/class RenameNameToOwnerOnPosts/, contents, "wrong class name")
+    assert_match(/def test_rename_name_to_owner_on_posts_table_schema/m, contents, "wrong method name for test table schema")
     assert_match(/assert sql.table_exists\?\(:posts\)/, contents, "call to current table existance not present or wrong format")
     assert_match(/assert sql.column_exists\?\(:name\)/, contents, "call to column name existance not present or wrong format")
     assert_match(/assert sql.column_exists\?\(:owner\)/, contents, "call to column owner existance not present or wrong format")
@@ -234,7 +234,7 @@ class TestMigrationGenerator < GeneratorTest
     assert_match(/assert !sql.column_exists\?\(:new_column_name\)/, contents, "call to column owner existance not present or wrong format")
     assert_match(/assert !sql.column_exists\?\(:name\)/, contents, "call to column name non existance not present or wrong format")
     assert_match(/assert !sql.column_exists\?\(:owner\)/, contents, "call to column owner non existance not present or wrong format")
-    refute_match(/def test_rename_name_and_owner_from_posts_table_date/m, contents, "table schema method test present")
+    refute_match(/def test_rename_name_to_owner_on_posts_table_date/m, contents, "table schema method test present")
   end
   def test_migration_generator_for_class_with_many_names
     assert_output(/create  test\/migrate\/\d{14}_create_product_details_test.rb/m) do

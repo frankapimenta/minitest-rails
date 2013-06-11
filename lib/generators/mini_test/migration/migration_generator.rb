@@ -17,35 +17,36 @@ module MiniTest
       attr_reader :migration_action, :join_tables, :new_table_name
 
       def set_local_assigns!
-        @migration_template = "migration.rb"
+        @migration_template = "columns.rb"
         case file_name
-        when /^(add|remove)_(.*)_(?:to|from)_(.*)$/
+        when /^(add|remove)_(.*)_(?:to|from)_(.*)/
           @migration_action = $1
-          @table_name = $3.pluralize
-          @migration_template = 'columns.rb'
-          @migration_template = 'timestamps.rb' if $2 =~ /^timestamps$/ 
-        when /^(add|remove)_index(?:es)?_(.*)_on_(.*)$/
+          @table_name       = $3.pluralize
+          @migration_template = 'timestamps.rb' if $2 =~ /^timestamps$/
+        when /^(add|remove)_index(?:es)?_(.*)_on_(.*)/
           @migration_action = $1
-          @table_name = $3.pluralize
-          @migration_template = 'indexes.rb' 
-        when /join/
+          @table_name       = $3.pluralize
+          @migration_template = 'indexes.rb'
+        when /join_table/
           if attributes.size == 2
             @migration_action = 'join'
             @join_tables = attributes.map(&:plural_name)
             @migration_template = 'tables.rb'
+            set_index_names
           end
-        when /^rename_.*_from_(.*)$/
-          @migration_action = 'rename'
-          @table_name = $1.pluralize
+        when /^rename_.*_on_(.*)$/
           @migration_template = 'columns.rb'
-        when /^(create|rename)_(.+)$/
-            @migration_action = $1
-            @migration_template = "tables.rb"
+          @migration_action = 'rename'
+          @table_name = $1
+        when /^(create|rename)_(.+)/
+          @migration_template = "tables.rb"
+          @migration_action = $1
           if @migration_action == 'create'
-            @table_name = $2.pluralize
-          else # so rename
-              $2 =~ /(.*)_to_(.*)/
-              @table_name, @new_table_name = $1.pluralize, $2.pluralize
+              @table_name = $2.pluralize
+          else
+            @migration_action = 'rename'
+            $2 =~ /(.*)_to_(.*)/
+            @table_name, @new_table_name = $1.pluralize, $2.pluralize
           end
         else
           @migration_template = 'empty.rb'
