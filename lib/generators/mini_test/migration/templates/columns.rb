@@ -143,9 +143,9 @@ class <%= class_name %>MigrationTest < MigrationTest
 
     <%- attributes.each_with_index do |attribute, index| -%>
     <%- if index % 2 == 0 -%>
-    assert sql.column_exists?(:<%= attribute.name %>)
+    assert sql.column_exists?(:<%= table_name %>, :<%= attribute.name %>)
     <%- else -%>
-    assert !sql.column_exists?(:<%= attribute.name %>)
+    assert !sql.column_exists?(:<%= table_name %>, :<%= attribute.name %>)
     <%- end -%>
     <%- end -%>
 
@@ -155,9 +155,9 @@ class <%= class_name %>MigrationTest < MigrationTest
 
     <%- attributes.each_with_index do |attribute, index| -%>
     <%- if index % 2 != 0 -%>
-    assert sql.column_exists?(:<%= attribute.name %>)
+    assert sql.column_exists?(:<%= table_name %>, :<%= attribute.name %>)
     <%- else -%>
-    assert !sql.column_exists?(:<%= attribute.name %>)
+    assert !sql.column_exists?(:<%= table_name %>, :<%= attribute.name %>)
     <%- end -%>
     <%- end -%>
 
@@ -167,9 +167,9 @@ class <%= class_name %>MigrationTest < MigrationTest
 
     <%- attributes.each_with_index do |attribute, index| -%>
     <%- if index % 2 == 0 -%>
-    assert sql.column_exists?(:<%= attribute.name %>)
+    assert sql.column_exists?(:<%= table_name %>, :<%= attribute.name %>)
     <%- else -%>
-    assert !sql.column_exists?(:<%= attribute.name %>)
+    assert !sql.column_exists?(:<%= table_name %>, :<%= attribute.name %>)
     <%- end -%>
     <%- end -%>
   end

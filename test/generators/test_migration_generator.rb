@@ -229,12 +229,12 @@ class TestMigrationGenerator < GeneratorTest
     assert_match(/class RenameNameToTitleAndNumberToCodeOnPosts/, contents, "wrong class name")
     assert_match(/def test_rename_name_to_title_and_number_to_code_on_posts_table_schema/m, contents, "wrong method name for test table schema")
     assert_match(/assert sql.table_exists\?\(:posts\)/, contents, "call to current table existance not present or wrong format")
-    assert_match(/assert sql.column_exists\?\(:name\)/, contents, "call to column name existance not present or wrong format")
-    assert_match(/assert sql.column_exists\?\(:title\)/, contents, "call to column title existance not present or wrong format")
-    assert_match(/assert sql.column_exists\?\(:number\)/, contents, "call to column number existance not present or wrong format")
-    assert_match(/assert !sql.column_exists\?\(:name\)/, contents, "call to column name non existance not present or wrong format")
-    assert_match(/assert !sql.column_exists\?\(:title\)/, contents, "call to column title non existance not present or wrong format")
-    assert_match(/assert !sql.column_exists\?\(:number\)/, contents, "call to column number non existance not present or wrong format")
+    assert_match(/assert sql.column_exists\?\(:posts, :name\)/, contents, "call to column name existance not present or wrong format")
+    assert_match(/assert sql.column_exists\?\(:posts, :title\)/, contents, "call to column title existance not present or wrong format")
+    assert_match(/assert sql.column_exists\?\(:posts, :number\)/, contents, "call to column number existance not present or wrong format")
+    assert_match(/assert !sql.column_exists\?\(:posts, :name\)/, contents, "call to column name non existance not present or wrong format")
+    assert_match(/assert !sql.column_exists\?\(:posts, :title\)/, contents, "call to column title non existance not present or wrong format")
+    assert_match(/assert !sql.column_exists\?\(:posts, :number\)/, contents, "call to column number non existance not present or wrong format")
     refute_match(/def test_rename_name_to_title_and_number_to_code_on_posts_table_date/m, contents, "table schema method test present")
   end
   def test_migration_generator_for_class_with_many_names
