@@ -12,20 +12,10 @@ class <%= class_name %>MigrationTest < MigrationTest
     <%- end -%>
 
     migrate version:<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%> 
-    assert_table :<%= table_name %> do |t|
-      t.integer	:id
-      <%- attributes.each do |attribute| -%>
-      <%- if attribute.type.to_sym == :references %>
-      <%= "t.integer	:#{attribute.name}_id" -%> 
-      <%= "t.index	    :#{attribute.name}_id, name: 'index_#{table_name}_on_#{attribute.name}_id', unique: false" %>
-      <%- else %>
-      <%= "t.#{attribute.type}	:#{attribute.name}#{", #{attribute.attr_options}" unless attribute.attr_options.empty?}" %>
-      <%= "t.index       :#{attribute.name}, name: 'index_#{table_name}_on_#{attribute.name}'#{", unique: #{attribute.has_uniq_index?}"}" if attribute.has_index? %>
-      <%- end -%>
-      <%- end -%>
-      t.datetime	:created_at
-      t.datetime	:updated_at
-    end
+
+    <%- attributes.each do |attribute| -%>
+    assert sql.column_exists?(:<%= table_name %>, :<%= attribute.name %>)
+    <%- end -%>
 
     migrate version: version_before(<%= Time.now.utc.strftime("%Y%m%d%H%M%S") -%>)
     # assert existance of table, columns or index
@@ -73,7 +63,7 @@ class <%= class_name %>MigrationTest < MigrationTest
     _updated_at = 1.day.ago.strftime("%Y-%m-%d %H:%M:%S")        
 
     sql.execute "INSERT INTO <%= table_name %> (id,<%- attributes.each do |attribute| -%> <%= attribute.type == :references ? "#{attribute.name.to_s}_id, " : "#{attribute.name.to_s}," %> <% end %>..., created_at, updated_at)
-    VALUES (\"#{_id}\",<%- attributes.each do |attribute| -%> <%= attribute.type == :references ? "\\\"\#\{_#{attribute.name.to_s}_id\}\\\"," : "\\\"\#\{_#{attribute.name.to_s}\}\\\"," %> <% end %>\"#{...}\", \"#{_created_at}\", \"#{_updated_at}\")"
+    VALUES (\"#{_id}\",<%- attributes.each do |attribute| -%> <%= attribute.type == :references ? "\\\"\#\{_#{attribute.name.to_s}_id\}\\\"," : "\\\"\#\{_#{attribute.name.to_s}\}\\\"," %><% end %> \"#{_created_at}\", \"#{_updated_at}\")"
 
     _<%= table_name %>_row  = sql.select_one "SELECT * FROM <%= table_name %>"
 

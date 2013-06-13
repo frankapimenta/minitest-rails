@@ -120,6 +120,9 @@ require_relative '../test_helper'
       <%= "_#{attr.name} = 'some data really bigggggggg'" %>
       <%- when 'time' -%>
       <%= "_#{attr.name} = #{Time.now.to_s}" %>
+      <%- when 'references' %>
+      <%- when 'belongs_to' %>
+      <%= "_#{attr.name} = 1" %>
       <%- else %>
       "attribute requested not recognized"
       <%- end -%>
@@ -135,10 +138,10 @@ require_relative '../test_helper'
       assert_equal _id, _<%= table_name %>_row['id'].to_i
       <%- attributes.sort_by(&:type).each do |attr| -%>
       <%- case attr.type.to_s -%>
-      <%- when 'binary' %>
-      <%= "assert_equal _#{attr.name},  _#{table_name}_row['#{attr.name}']" -%>
       <%- when 'boolean' %>
       <%= "assert _#{table_name}_row['#{attr.name}']" -%>
+      <%- when 'binary' %>
+      <%= "assert_equal _#{attr.name},  _#{table_name}_row['#{attr.name}']" -%>
       <%- when 'date' %>
       <%= "assert_equal _#{attr.name}, _#{table_name}_row['#{attr.name}']" -%>
       <%- when 'datetime' %>
@@ -157,6 +160,9 @@ require_relative '../test_helper'
       <%= "assert_equal _#{attr.name}, _#{table_name}_row['#{attr.name}']" -%>
       <%- when 'time' %>
       <%= "assert_equal _#{attr.name}, _#{table_name}_row['#{attr.name}']" -%>
+      <%- when 'references' %>
+      <%- when 'belongs_to' %>
+      <%= "assert_equal _#{attr.name}, _#{table_name}_row['#{attr.name}'].to_i" %>
       <%- else %>
       "attribute requested not recognized"
       <%- end -%>
