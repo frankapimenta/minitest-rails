@@ -16,7 +16,7 @@ class TestMigrationGenerator < GeneratorTest
     assert_match /assert sql.column_exists\?\(\:posts, \:title\)/m,  contents, "assert for column title existance"
     assert_match(/def test_add_column_title_to_posts_table_data/m, contents, "wrong method name for test table data")
     assert_match(/_title = 'some data'/m, contents, "no variable _email is present")
-    assert_match(/INSERT INTO posts \(id, title, \.\.\., created_at, updated_at\)\s*VALUES \(\\\"\#\{_id\}\\\", \\\"\#\{_title\}\\\", \\\"\#\{_created_at\}\\\", \\\"\#\{_updated_at\}\\\"\)/m, contents, "no data being inserted in posts table")
+    assert_match(/INSERT INTO posts \(id, title, created_at, updated_at\)\s*VALUES \(\\\"\#\{_id\}\\\", \\\"\#\{_title\}\\\", \\\"\#\{_created_at\}\\\", \\\"\#\{_updated_at\}\\\"\)/m, contents, "no data being inserted in posts table")
     assert_match(/SELECT \* FROM posts/m, contents, "no data fetched from posts table")
     assert_match(/assert_equal _id, _posts_row\['id'\].to_i/, contents, "assert_equal for id did not match")
     assert_match(/assert_equal _title, _posts_row\['title'\]/, contents, "assert_equal for title did not match")
@@ -36,7 +36,7 @@ class TestMigrationGenerator < GeneratorTest
     assert_match /assert sql.column_exists\?\(\:posts, \:title\)/m,  contents, "assert for column title existance"
     assert_match(/def test_add_column_title_to_posts_table_data/m, contents, "wrong method name for test table data")
     assert_match(/_title = 'some data'/m, contents, "no variable _email is present")
-    assert_match(/INSERT INTO posts \(id, title, \.\.\., created_at, updated_at\)\s*VALUES \(\\\"\#\{_id\}\\\", \\\"\#\{_title\}\\\", \\\"\#\{_created_at\}\\\", \\\"\#\{_updated_at\}\\\"\)/m, contents, "no data being inserted in posts table")
+    assert_match(/INSERT INTO posts \(id, title, created_at, updated_at\)\s*VALUES \(\\\"\#\{_id\}\\\", \\\"\#\{_title\}\\\", \\\"\#\{_created_at\}\\\", \\\"\#\{_updated_at\}\\\"\)/m, contents, "no data being inserted in posts table")
     assert_match(/SELECT \* FROM posts/m, contents, "no data fetched from posts table")
     assert_match(/assert_equal _id, _posts_row\['id'\].to_i/, contents, "assert_equal for id did not match")
     assert_match(/assert_equal _title, _posts_row\['title'\]/, contents, "assert_equal for title did not match")
@@ -56,7 +56,7 @@ class TestMigrationGenerator < GeneratorTest
     assert_match /assert sql.column_exists\?\(\:posts, \:title\)/m,  contents, "assert for column title existance"
     assert_match(/def test_add_column_title_and_email_to_posts_table_data/m, contents, "wrong method name for test table data")
     assert_match(/_title = 'some data'/m, contents, "no variable _email is present")
-    assert_match(/INSERT INTO posts \(id, title,  email, \.\.\., created_at, updated_at\)\s*VALUES \(\\\"\#\{_id\}\\\", \\\"\#\{_title\}\\\", \\\"\#\{_email\}\\\", \\\"\#\{_created_at\}\\\", \\\"\#\{_updated_at\}\\\"\)/m, contents, "no data being inserted in posts table")
+    assert_match(/INSERT INTO posts \(id, title,  email, created_at, updated_at\)\s*VALUES \(\\\"\#\{_id\}\\\", \\\"\#\{_title\}\\\", \\\"\#\{_email\}\\\", \\\"\#\{_created_at\}\\\", \\\"\#\{_updated_at\}\\\"\)/m, contents, "no data being inserted in posts table")
     assert_match(/SELECT \* FROM posts/m, contents, "no data fetched from posts table")
     assert_match(/assert_equal _id, _posts_row\['id'\].to_i/, contents, "assert_equal for id did not match")
     assert_match(/assert_equal _title, _posts_row\['title'\]/, contents, "assert_equal for title did not match")

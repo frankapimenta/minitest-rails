@@ -62,7 +62,7 @@ class <%= class_name %>MigrationTest < MigrationTest
     _created_at = 2.day.ago.strftime("%Y-%m-%d %H:%M:%S")
     _updated_at = 1.day.ago.strftime("%Y-%m-%d %H:%M:%S")        
 
-    sql.execute "INSERT INTO <%= table_name %> (id,<%- attributes.each do |attribute| -%> <%= attribute.type == :references ? "#{attribute.name.to_s}_id, " : "#{attribute.name.to_s}," %> <% end %>..., created_at, updated_at)
+    sql.execute "INSERT INTO <%= table_name %> (id,<%- attributes.each do |attribute| -%> <%= attribute.type == :references ? "#{attribute.name.to_s}_id," : "#{attribute.name.to_s}," %> <% end %>created_at, updated_at)
     VALUES (\"#{_id}\",<%- attributes.each do |attribute| -%> <%= attribute.type == :references ? "\\\"\#\{_#{attribute.name.to_s}_id\}\\\"," : "\\\"\#\{_#{attribute.name.to_s}\}\\\"," %><% end %> \"#{_created_at}\", \"#{_updated_at}\")"
 
     _<%= table_name %>_row  = sql.select_one "SELECT * FROM <%= table_name %>"
